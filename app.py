@@ -4,9 +4,9 @@ import io
 import zipfile
 from openpyxl import load_workbook
 
-st.set_page_config(page_title="Generator Template SPD", page_icon="📄")
+st.set_page_config(page_title="Generator Template SPD 3 Honor", page_icon="📄")
 
-st.title("📄 Generator Template SPD")
+st.title("📄 Generator Template SPD 3 Honor")
 
 # Upload database dan template
 db_file = st.file_uploader("Upload Database (Excel/CSV)", type=["xlsx", "csv"])
@@ -22,11 +22,9 @@ if db_file and template_file:
     # Pastikan kolom yang dibutuhkan ada
     required_cols = [
         "Nama",
-        "Transport Pesawat",
-        "Transport Kereta",
-        "Transport Bandara/Stasiun Asal",
-        "Transport Bandara/Stasiun Hotel",
-        "Transport Lokal"
+        "Honorarium Persiapan UKOMNAS",
+        "Honorarium Pemantauan Briefing UKOMNAS",
+        "Honorarium Pelaksanaan UKOMNAS"
     ]
 
     if not all(col in df.columns for col in required_cols):
@@ -47,17 +45,13 @@ if db_file and template_file:
 
             # Isi data
             ws["D26"] = data_row["Nama"]
-            ws["C11"] = data_row["Transport Pesawat"]
-            ws["C12"] = data_row["Transport Kereta"]
-            ws["C13"] = data_row["Transport Bandara/Stasiun Asal"]
-            ws["C14"] = data_row["Transport Bandara/Stasiun Hotel"]
-            ws["C15"] = data_row["Transport Lokal"]
+            ws["C11"] = data_row["Honorarium Persiapan UKOMNAS"]
+            ws["C12"] = data_row["Honorarium Pemantauan Briefing UKOMNAS"]
+            ws["C13"] = data_row["Honorarium Pelaksanaan UKOMNAS"]
             ws["C17"] = sum([
-                data_row["Transport Pesawat"],
-                data_row["Transport Kereta"],
-                data_row["Transport Bandara/Stasiun Asal"],
-                data_row["Transport Bandara/Stasiun Hotel"],
-                data_row["Transport Lokal"]
+                data_row["Honorarium Persiapan UKOMNAS"],
+                data_row["Honorarium Pemantauan Briefing UKOMNAS"],
+                data_row["Honorarium Pelaksanaan UKOMNAS"]
             ])
 
             buffer = io.BytesIO()
@@ -83,19 +77,15 @@ if db_file and template_file:
                     wb = load_workbook(template_file)
                     ws = wb.active
 
-                    ws["D26"] = row["Nama"]
-                    ws["C11"] = row["Transport Pesawat"]
-                    ws["C12"] = row["Transport Kereta"]
-                    ws["C13"] = row["Transport Bandara/Stasiun Asal"]
-                    ws["C14"] = row["Transport Bandara/Stasiun Hotel"]
-                    ws["C15"] = row["Transport Lokal"]
-                    ws["C17"] = sum([
-                        row["Transport Pesawat"],
-                        row["Transport Kereta"],
-                        row["Transport Bandara/Stasiun Asal"],
-                        row["Transport Bandara/Stasiun Hotel"],
-                        row["Transport Lokal"]
-                    ])
+                     ws["D26"] = data_row["Nama"]
+            ws["C11"] = data_row["Honorarium Persiapan UKOMNAS"]
+            ws["C12"] = data_row["Honorarium Pemantauan Briefing UKOMNAS"]
+            ws["C13"] = data_row["Honorarium Pelaksanaan UKOMNAS"]
+            ws["C17"] = sum([
+                data_row["Honorarium Persiapan UKOMNAS"],
+                data_row["Honorarium Pemantauan Briefing UKOMNAS"],
+                data_row["Honorarium Pelaksanaan UKOMNAS"]
+            ])
 
                     file_buffer = io.BytesIO()
                     wb.save(file_buffer)
