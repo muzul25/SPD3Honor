@@ -65,28 +65,4 @@ if db_file and template_file:
 
             st.success(f"Template untuk {nama_terpilih} berhasil dibuat!")
             st.download_button(
-                label="📥 Download File",
-                data=buffer,
-                file_name=f"Template_{nama_terpilih}.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-            )
-
-        # -----------------------------
-        # DOWNLOAD SEMUA NAMA (ZIP)
-        # -----------------------------
-        if st.button("📦 Generate Semua Template (ZIP)"):
-            zip_buffer = io.BytesIO()
-
-            with zipfile.ZipFile(zip_buffer, "w") as zf:
-                for _, row in df.iterrows():
-                    wb = load_workbook(template_file)
-                    ws = wb.active
-
-                    ws["D26"] = row["Nama"]
-                    ws["C11"] = row["Honorarium Persiapan UKOMNAS"]
-                    ws["C12"] = row["Honorarium Pemantauan Briefing UKOMNAS"]
-                    ws["C13"] = row["Honorarium Pelaksanaan UKOMNAS"]
-
-                    total_honor = (
-                        row["Honorarium Persiapan UKOMNAS"]
-                        + row["Honorarium Pe]()
+                label="📥 Downl
