@@ -31,7 +31,7 @@ def isi_template(wb_stream, nama, p1, p2, p3, pph21):
     ws = wb.active  # pakai sheet aktif
 
     # Isi sel sesuai ketentuan
-    ws["D26"] = nama
+    ws["D27"] = nama
     ws["C11"] = p1
     ws["C12"] = p2
     ws["C13"] = p3
