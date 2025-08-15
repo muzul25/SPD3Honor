@@ -77,7 +77,7 @@ if db_file and template_file:
                     wb = load_workbook(template_file)
                     ws = wb.active
 
-                     ws["D26"] = data_row["Nama"]
+            ws["D26"] = data_row["Nama"]
             ws["C11"] = data_row["Honorarium Persiapan UKOMNAS"]
             ws["C12"] = data_row["Honorarium Pemantauan Briefing UKOMNAS"]
             ws["C13"] = data_row["Honorarium Pelaksanaan UKOMNAS"]
