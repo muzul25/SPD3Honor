@@ -77,4 +77,16 @@ if db_file and template_file:
         if st.button("📦 Generate Semua Template (ZIP)"):
             zip_buffer = io.BytesIO()
 
-            with zipfile.ZipFile(zip_buffe_
+            with zipfile.ZipFile(zip_buffer, "w") as zf:
+                for _, row in df.iterrows():
+                    wb = load_workbook(template_file)
+                    ws = wb.active
+
+                    ws["D26"] = row["Nama"]
+                    ws["C11"] = row["Honorarium Persiapan UKOMNAS"]
+                    ws["C12"] = row["Honorarium Pemantauan Briefing UKOMNAS"]
+                    ws["C13"] = row["Honorarium Pelaksanaan UKOMNAS"]
+
+                    total_honor = (
+                        row["Honorarium Persiapan UKOMNAS"]
+                        + row["Honorarium Pe]()
