@@ -58,10 +58,10 @@ if db_file and template_file:
             ws["C14"] = total_honor
 
             # Ambil PPH21 dari C15 di template (jika kosong = 0)
-            pph21 = ws["C15"].value or 0
+            pph21 = ws["C16"].value or 0
 
             # Hitung jumlah akhir
-            ws["C17"] = total_honor - pph21
+            ws["C18"] = total_honor - pph21
 
             buffer = io.BytesIO()
             wb.save(buffer)
@@ -97,8 +97,8 @@ if db_file and template_file:
                     ])
                     ws["C14"] = total_honor
 
-                    pph21 = ws["C15"].value or 0
-                    ws["C17"] = total_honor - pph21
+                    pph21 = ws["C16"].value or 0
+                    ws["C18"] = total_honor - pph21
 
                     file_buffer = io.BytesIO()
                     wb.save(file_buffer)
