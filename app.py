@@ -4,9 +4,9 @@ import io
 import zipfile
 from openpyxl import load_workbook
 
-st.set_page_config(page_title="Generator Template SPD 3 Honor", page_icon="📄")
+st.set_page_config(page_title="Generator Template SPD Honorium", page_icon="📄")
 
-st.title("📄 Generator Template SPD 3 Honor")
+st.title("📄 Generator Template SPD Honorium")
 
 # Upload database dan template
 db_file = st.file_uploader("Upload Database (Excel/CSV)", type=["xlsx", "csv"])
@@ -19,7 +19,7 @@ if db_file and template_file:
     else:
         df = pd.read_excel(db_file)
 
-    # Pastikan kolom yang dibutuhkan ada
+    # Kolom wajib
     required_cols = [
         "Nama",
         "Honorarium Persiapan UKOMNAS",
@@ -39,20 +39,29 @@ if db_file and template_file:
         nama_terpilih = st.selectbox("Pilih Nama", df["Nama"].unique())
 
         if st.button("🔄 Generate Template (Satu Nama)"):
-            data_row = df[df["Nama"] == nama_terpilih].iloc[0]
+            row = df[df["Nama"] == nama_terpilih].iloc[0]
             wb = load_workbook(template_file)
             ws = wb.active
 
-            # Isi data
-            ws["D26"] = data_row["Nama"]
-            ws["C11"] = data_row["Honorarium Persiapan UKOMNAS"]
-            ws["C12"] = data_row["Honorarium Pemantauan Briefing UKOMNAS"]
-            ws["C13"] = data_row["Honorarium Pelaksanaan UKOMNAS"]
-            ws["C17"] = sum([
-                data_row["Honorarium Persiapan UKOMNAS"],
-                data_row["Honorarium Pemantauan Briefing UKOMNAS"],
-                data_row["Honorarium Pelaksanaan UKOMNAS"]
+            # Isi data honor
+            ws["D26"] = row["Nama"]
+            ws["C11"] = row["Honorarium Persiapan UKOMNAS"]
+            ws["C12"] = row["Honorarium Pemantauan Briefing UKOMNAS"]
+            ws["C13"] = row["Honorarium Pelaksanaan UKOMNAS"]
+
+            # Hitung total honor
+            total_honor = sum([
+                row["Honorarium Persiapan UKOMNAS"],
+                row["Honorarium Pemantauan Briefing UKOMNAS"],
+                row["Honorarium Pelaksanaan UKOMNAS"]
             ])
+            ws["C14"] = total_honor
+
+            # Ambil PPH21 dari C15 di template (jika kosong = 0)
+            pph21 = ws["C15"].value or 0
+
+            # Hitung jumlah akhir
+            ws["C17"] = total_honor - pph21
 
             buffer = io.BytesIO()
             wb.save(buffer)
@@ -71,21 +80,25 @@ if db_file and template_file:
         # -----------------------------
         if st.button("📦 Generate Semua Template (ZIP)"):
             zip_buffer = io.BytesIO()
-
             with zipfile.ZipFile(zip_buffer, "w") as zf:
                 for _, row in df.iterrows():
                     wb = load_workbook(template_file)
                     ws = wb.active
 
-            ws["D26"] = data_row["Nama"]
-            ws["C11"] = data_row["Honorarium Persiapan UKOMNAS"]
-            ws["C12"] = data_row["Honorarium Pemantauan Briefing UKOMNAS"]
-            ws["C13"] = data_row["Honorarium Pelaksanaan UKOMNAS"]
-            ws["C17"] = sum([
-                data_row["Honorarium Persiapan UKOMNAS"],
-                data_row["Honorarium Pemantauan Briefing UKOMNAS"],
-                data_row["Honorarium Pelaksanaan UKOMNAS"]
-            ])
+                    ws["D26"] = row["Nama"]
+                    ws["C11"] = row["Honorarium Persiapan UKOMNAS"]
+                    ws["C12"] = row["Honorarium Pemantauan Briefing UKOMNAS"]
+                    ws["C13"] = row["Honorarium Pelaksanaan UKOMNAS"]
+
+                    total_honor = sum([
+                        row["Honorarium Persiapan UKOMNAS"],
+                        row["Honorarium Pemantauan Briefing UKOMNAS"],
+                        row["Honorarium Pelaksanaan UKOMNAS"]
+                    ])
+                    ws["C14"] = total_honor
+
+                    pph21 = ws["C15"].value or 0
+                    ws["C17"] = total_honor - pph21
 
                     file_buffer = io.BytesIO()
                     wb.save(file_buffer)
@@ -94,7 +107,6 @@ if db_file and template_file:
                     zf.writestr(f"Template_{row['Nama']}.xlsx", file_buffer.read())
 
             zip_buffer.seek(0)
-
             st.success("Semua template berhasil dibuat!")
             st.download_button(
                 label="📥 Download ZIP Semua Template",
